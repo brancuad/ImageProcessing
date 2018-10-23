@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ImageProcessing.Pages
 {
-	public class OldIndexModel : PageModel
-	{
-		public void OnGet()
-		{
+    public class IndexModel : PageModel
+    {
+        public void OnGet()
+        {
 
-		}
-	}
+        }
+    }
 }

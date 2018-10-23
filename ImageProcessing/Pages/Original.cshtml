@@ -1,0 +1,57 @@
+﻿@page
+@model ImageProcessing.Pages.IndexModel
+@{
+    ViewData["Title"] = "Original Palette Transfer";
+}
+
+<head>
+	<script src="~/js/jquery-3.3.1.js"></script>
+	<script src="~/js/clusterfck.js"></script>
+	<script src="~/js/jscolor.js"></script>
+	<script src="~/js/color.js"></script>
+	<script src="~/js/math.js"></script>
+	<script src="~/js/rbf.js"></script>
+	<script src="~/js/numeric.js"></script>
+	<script src="~/js/color.all.min.js"></script>
+	<script src="~/js/jqColor.js"></script>
+	<script src="~/js/colorTransfer.js"></script>
+	<link rel="stylesheet" href="~/css/palette.css" />
+	<link rel="stylesheet" href="~/css/jqColor.css" />
+</head>
+<body>
+	<div id="content">
+		<div id="originalImage" class="imageContainer">
+			<canvas id="origin" class="imageDisplay" height="400" width="400"></canvas>
+			<canvas id="originHist" class="imageDisplay" height="400" width="400" style="display: none"></canvas>
+		</div>
+
+		<div id="paletteContainer">
+			<img id="loading" src="../images/loading.gif" />
+			<select id="imgSelect" name="images">
+				<option value="../images/sky.jpg">Pretty Sky</option>
+				<option value="../images/castle.jpg">Disney Castle</option>
+				<option value="../images/flower.jpg">Flower</option>
+				<option value="../images/forest.jpg">Forest</option>
+				<option value="../images/test.png">Woman</option>
+				<option value="../images/icecream.jpg">Ice Cream</option>
+			</select>
+			<button id="calc" class="actionBtn">Calculate Palette</button>
+			<div id="colorContainer">
+				<input id="kPicker3" type="radio" name="kPicker" value="3" />
+				<label for="kPicker3">3</label>
+				<input id="kPicker4" type="radio" name="kPicker" value="4" />
+				<label for="kPicker4">4</label>
+				<input id="kPicker5" type="radio" name="kPicker" value="5" checked="checked" />
+				<label for="kPicker5">5</label>
+				<input id="kPicker6" type="radio" name="kPicker" value="6" />
+				<label for="kPicker6">6</label>
+			</div>
+			<button id="transfer" class="actionBtn">Transfer Colors</button>
+		</div>
+
+
+		<div id="outputImage" class="imageContainer">
+			<canvas id="output" class="imageDisplay" height="400" width="400"></canvas>
+		</div>
+	</div>
+</body>
