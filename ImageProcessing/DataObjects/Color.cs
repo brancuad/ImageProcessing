@@ -22,7 +22,7 @@ namespace ImageProcessing.DataObjects
 		/// <summary>
 		/// Initialize with default (black) color
 		/// </summary>
-		public Color() : this(0, 0, 0)
+		public Color() : this(0, 0, 0, 0)
 		{
 		}
 
@@ -32,11 +32,13 @@ namespace ImageProcessing.DataObjects
 		/// <param name="R"></param>
 		/// <param name="G"></param>
 		/// <param name="B"></param>
-		public Color(int R, int G, int B)
+		/// <param name="A"></param>
+		public Color(int R, int G, int B, int A = 255)
 		{
 			this.R = R;
 			this.G = G;
 			this.B = B;
+			this.A = A;
 
 			// Calcluate Lab
 		}

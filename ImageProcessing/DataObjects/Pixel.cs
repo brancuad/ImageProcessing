@@ -10,8 +10,8 @@ namespace ImageProcessing.DataObjects
 	/// </summary>
 	public class Pixel
 	{
-		Position position;
-		Color color;
+		Position Position;
+		Color Color;
 
 		/// <summary>
 		/// Default constructor
@@ -28,8 +28,26 @@ namespace ImageProcessing.DataObjects
 		/// <param name="color"></param>
 		public Pixel(Position position, Color color)
 		{
-			this.position = position;
-			this.color = color;
+			this.Position = position;
+			this.Color = color;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || !this.GetType().Equals(obj.GetType()))
+			{
+				return false;
+			}
+
+			Pixel other = (Pixel)obj;
+
+			if (this.Position.Equals(other.Position)
+				&& this.Color.Equals(other.Color))
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 	}
