@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ImageProcessing.DataObjects
 {
@@ -19,11 +16,14 @@ namespace ImageProcessing.DataObjects
 		public double a = 0;
 		public double b = 0;
 
+		public static Color Black = new Color();
+
 		/// <summary>
 		/// Initialize with default (black) color
 		/// </summary>
 		public Color() : this(0, 0, 0, 255)
 		{
+
 		}
 
 		/// <summary>
@@ -41,17 +41,68 @@ namespace ImageProcessing.DataObjects
 			this.A = A;
 
 			// Calcluate Lab
-			SetLab();
+			if (this == Color.Black)
+				SetLab();
 		}
 
 		/// <summary>
-		/// Calculate Color in Lab color space
+		/// Calculate Color in Lab color space. Derived from color.js.
 		/// </summary>
 		/// <param name="color"></param>
 		private static Tuple<double, double, double> CalcluateLab(Color color)
 		{
-			// TODO
-			return new Tuple<double, double, double>(0,0,0);
+			double r = color.R / 255;
+			double g = color.G / 255;
+			double b = color.B / 255;
+
+			double x, y, z;
+
+			r = (r > 0.04045) ? Math.Pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+			g = (g > 0.04045) ? Math.Pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+			b = (b > 0.04045) ? Math.Pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+
+			x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
+			y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
+			z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
+
+			x = (x > 0.008856) ? Math.Pow(x, 1 / 3) : (7.787 * x) + 16 / 116;
+			y = (y > 0.008856) ? Math.Pow(y, 1 / 3) : (7.787 * y) + 16 / 116;
+			z = (z > 0.008856) ? Math.Pow(z, 1 / 3) : (7.787 * z) + 16 / 116;
+
+			return new Tuple<double, double, double>((116 * y) - 16, 500 * (x - y), 200 * (y - z));
+		}
+
+		/// <summary>
+		/// Get a Color object from Lab values
+		/// </summary>
+		/// <param name="L"></param>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		public static Color GetColorFromLab(double L, double a, double b)
+		{
+			double y = (L + 16) / 116;
+			double x = a / 500 + y;
+			double z = y - b / 200;
+			double R, G, B;
+
+			x = 0.95047 * ((x * x * x > 0.008856) ? x * x * x : (x - 16 / 116) / 7.787);
+			y = 1.00000 * ((y * y * y > 0.008856) ? y * y * y : (y - 16 / 116) / 7.787);
+			z = 1.08883 * ((z * z * z > 0.008856) ? z * z * z : (z - 16 / 116) / 7.787);
+			
+			R = x * 3.2406 + y * -1.5372 + z * -0.4986;
+			G = x * -0.9689 + y * 1.8758 + z * 0.0415;
+			B = x * 0.0557 + y * -0.2040 + z * 1.0570;
+
+			R = (R > 0.0031308) ? (1.055 * Math.Pow(R, 1 / 2.4) - 0.055) : 12.92 * R;
+			G = (G > 0.0031308) ? (1.055 * Math.Pow(G, 1 / 2.4) - 0.055) : 12.92 * G;
+			B = (B > 0.0031308) ? (1.055 * Math.Pow(B, 1 / 2.4) - 0.055) : 12.92 * B;
+
+			R = Math.Max(0, Math.Min(1, R)) * 255;
+			G = Math.Max(0, Math.Min(1, G)) * 255;
+			B = Math.Max(0, Math.Min(1, B)) * 255;
+
+			return new Color((int)Math.Round(R), (int)Math.Round(G), (int)Math.Round(B));
 		}
 
 		/// <summary>

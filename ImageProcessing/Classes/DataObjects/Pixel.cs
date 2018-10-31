@@ -10,13 +10,13 @@ namespace ImageProcessing.DataObjects
 	/// </summary>
 	public class Pixel : IEquatable<Pixel>
 	{
-		Position Position;
-		Color Color;
+		public Position Position;
+		public Color Color;
 
 		/// <summary>
 		/// Default constructor
 		/// </summary>
-		public Pixel() : this(new Position(), new Color())
+		public Pixel() : this(new Position(), Color.Black)
 		{
 
 		}
