@@ -3,7 +3,7 @@
 // Img class to store images in javascript
 
 // Initialize Img
-function Img(canvas: JQueryStatic) {
+function Img(canvas) {
 	this.canvas = canvas;
 
 	this.context = canvas[0].getContext('2d');
@@ -48,4 +48,41 @@ Img.prototype.getPixels = function (x = 0, y = 0) {
 	this.pixels = data;
 
 	return data;
-}
+};
+
+// Use an ajax call to set the palette of the image
+Img.prototype.setPalette = function (paletteSize) {
+	var self = this;
+
+	var url = "/api/palette";
+
+	var data = {
+		pixels: JSON.stringify(this.pixels),
+		paletteSize: paletteSize
+	};
+
+	// Set palette
+	var success = function (data) {
+		self.palette = data;
+	};
+
+	// Error alert
+	var error = function (data) {
+		alert("There was an error. Oh no!");
+	};
+
+	this.ajax(url, data, success, error);
+};
+
+// Make an ajax call to the url, with the data stringified
+Img.prototype.ajax = function (url, data, success, error) {
+	$.ajax({
+		type: "POST",
+		url: url,
+		data: data,
+		dataType: "json",
+		contentType: 'application/json',
+		success: success,
+		error: error
+	});
+};

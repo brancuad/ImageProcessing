@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ImageProcessing.Tools;
+﻿using ImageProcessing.Tools;
+using System.Collections.Generic;
 
 namespace ImageProcessing.DataObjects
 {
@@ -8,6 +8,18 @@ namespace ImageProcessing.DataObjects
 	/// </summary>
 	public class Image
 	{
+		public static Dictionary<string, Image> SavedImages = new Dictionary<string, Image>();
+
+		/// <summary>
+		/// List of editted versions of this image
+		/// </summary>
+		public List<Image> Edits { get; set; } = new List<Image>();
+
+		/// <summary>
+		/// Keeps copy of original pixels in image
+		/// </summary>
+		public List<Pixel> OriginalPixels { get; set; } = new List<Pixel>();
+
 		/// <summary>
 		/// Array of pixels in image
 		/// </summary>
@@ -17,6 +29,16 @@ namespace ImageProcessing.DataObjects
 		/// Array of colors in image palette
 		/// </summary>
 		public List<Color> Palette { get; set; } = new List<Color>();
+
+		/// <summary>
+		/// List of RBF models for the image palette
+		/// </summary>
+		public List<alglib.rbfmodel> RBFs { get; set; } = new List<alglib.rbfmodel>();
+
+		/// <summary>
+		/// List of Segments in the image
+		/// </summary>
+		public List<Segment> Segments { get; set; } = new List<Segment>();
 
 		/// <summary>
 		/// Default constructor
@@ -33,6 +55,7 @@ namespace ImageProcessing.DataObjects
 		public Image(List<Pixel> pixels)
 		{
 			this.Pixels = pixels;
+			this.OriginalPixels = this.Pixels;
 		}
 
 		/// <summary>
@@ -48,7 +71,7 @@ namespace ImageProcessing.DataObjects
 
 			for (int i = 0; i < pixelArray.Count; i += 4)
 			{
-				Color color = new Color(pixelArray[i], pixelArray[i+1], pixelArray[i+2], pixelArray[i+3]);
+				Color color = new Color(pixelArray[i], pixelArray[i + 1], pixelArray[i + 2], pixelArray[i + 3]);
 				Position position = null;
 
 				if (height >= 0 && width >= 0)
@@ -65,7 +88,7 @@ namespace ImageProcessing.DataObjects
 
 				// increment position counter
 				positionCounter.X++;
-				
+
 				if (positionCounter.X >= width)
 				{
 					// move to next row
@@ -100,6 +123,17 @@ namespace ImageProcessing.DataObjects
 		public void SetPalette()
 		{
 			this.Palette = PaletteManager.GetPalette(this);
+			this.RBFs = PaletteManager.GetWeights(this.Palette);
+		}
+
+		/// <summary>
+		/// Perform Palette-based Color Transfer
+		/// </summary>
+		/// <param name="newPalette"></param>
+		public void TransferPalette(List<Color> newPalette)
+		{
+			ColorTransfer.Transfer(this, newPalette);
+			this.Palette = newPalette;
 		}
 
 	}

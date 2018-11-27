@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using System;
 
 namespace ImageProcessing.DataObjects
 {
@@ -89,7 +91,7 @@ namespace ImageProcessing.DataObjects
 			x = 0.95047 * ((x * x * x > 0.008856) ? x * x * x : (x - 16 / 116) / 7.787);
 			y = 1.00000 * ((y * y * y > 0.008856) ? y * y * y : (y - 16 / 116) / 7.787);
 			z = 1.08883 * ((z * z * z > 0.008856) ? z * z * z : (z - 16 / 116) / 7.787);
-			
+
 			R = x * 3.2406 + y * -1.5372 + z * -0.4986;
 			G = x * -0.9689 + y * 1.8758 + z * 0.0415;
 			B = x * 0.0557 + y * -0.2040 + z * 1.0570;
@@ -103,6 +105,76 @@ namespace ImageProcessing.DataObjects
 			B = Math.Max(0, Math.Min(1, B)) * 255;
 
 			return new Color((int)Math.Round(R), (int)Math.Round(G), (int)Math.Round(B));
+		}
+
+		/// <summary>
+		/// Check if Color is out of Lab color gamut
+		/// </summary>
+		/// <returns></returns>
+		public bool OutOfGamut()
+		{
+			if ((L >= 100 || L <= 0) ||
+				(a >= 128 || a <= -128) ||
+				(b >= 128 || b <= -128))
+			{
+				return true;
+			}
+
+			// Check if all bounds have been reached
+			if ((R >= 255 || R <= 0) &&
+				(G >= 255 || G <= 0) &&
+				(B >= 255 || B <= 0))
+			{
+				return true;
+			}
+
+			bool outOfBounds = false;
+
+			for (int i = 0; i < 3; i++)
+			{
+				int val = 0;
+
+				switch (i)
+				{
+					case 0:
+						val = R;
+						break;
+					case 1:
+						val = G;
+						break;
+					case 2:
+						val = B;
+						break;
+					default:
+						val = R;
+						break;
+				}
+
+				if (val < 0 || val > 255)
+				{
+					outOfBounds = true;
+					break;
+				}
+			}
+
+			return outOfBounds;
+		}
+
+		/// <summary>
+		/// Return Vector in RGB.
+		/// </summary>
+		/// <param name="lab">True to return Lab vector</param>
+		/// <returns></returns>
+		public Vector<double> ToVector(bool Lab = false)
+		{
+			Vector<double> vec = DenseVector.OfArray(new double[] { R, G, B });
+
+			if (Lab)
+			{
+				vec = DenseVector.OfArray(new double[] { L, a, b });
+			}
+
+			return vec;
 		}
 
 		/// <summary>

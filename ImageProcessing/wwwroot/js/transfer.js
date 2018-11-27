@@ -3,6 +3,14 @@
 
 // Front End for Transfer.cshtml
 
+var showLoading = function () {
+	$("#loading").show();
+};
+
+var hideLoading = function () {
+	$("#loading").hide();
+};
+
 $(document).ready(function () {
 
 	var origin = new Img($("#origin"));
@@ -17,18 +25,11 @@ $(document).ready(function () {
 			origin.draw();
 
 			$("#calc").mousedown(showLoading).mouseup(function () {
-
 				// set pixel array
 				origin.getPixels();
 
-				origin.paletteSize = $("input[name=kPicker]:checked").val();
-				origin.palette = origin.getPalette();
-
-				origin.weights = origin.getWeights();
-
-				origin.showPalette();
-
-				hideLoading();
+				paletteSize = $("input[name=kPicker]:checked").val();
+				origin.setPalette(paletteSize);
 			});
 
 			$("#transfer").mousedown(showLoading).mouseup(function () {

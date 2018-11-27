@@ -10,7 +10,14 @@ namespace ImageProcessing.DataObjects
 	/// </summary>
 	public class Position : IEquatable<Position>
 	{
+		/// <summary>
+		/// Position X value
+		/// </summary>
 		public int X { get; set; } = 0;
+
+		/// <summary>
+		/// Position Y vlaue
+		/// </summary>
 		public int Y { get; set; } = 0;
 
 		/// <summary>

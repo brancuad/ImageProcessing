@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace ImageProcessing.Tools
 {
+	/// <summary>
+	/// Handles Palette extraction and manipulation
+	/// </summary>
 	public static class PaletteManager
 	{
 		/// <summary>
@@ -36,7 +39,7 @@ namespace ImageProcessing.Tools
 			// Get palette values
 			List<Color> palette = new List<Color>();
 
-			foreach(int index in centers)
+			foreach (int index in centers)
 			{
 				palette.Add(data.means[index]);
 			}
@@ -48,6 +51,60 @@ namespace ImageProcessing.Tools
 			palette = palette.Take(PaletteSize).ToList();
 
 			return palette;
+		}
+
+		/// <summary>
+		/// Get the RBF models for a color palette
+		/// </summary>
+		/// <param name="palette"></param>
+		/// <returns></returns>
+		public static List<alglib.rbfmodel> GetWeights(List<Color> palette)
+		{
+			List<alglib.rbfmodel> RBFs = new List<alglib.rbfmodel>();
+
+			// TOOD: Do RBF for each member of palette
+			if (palette.Count != PaletteSize)
+			{
+				return RBFs;
+			}
+
+			double[,] xy = new double[PaletteSize, 4];
+
+			for (int i = 0; i < palette.Count; i++)
+			{
+				Color color = palette[i];
+				xy[i, 0] = color.L;
+				xy[i, 1] = color.a;
+				xy[i, 2] = color.b;
+				xy[i, 3] = 0.0;
+			}
+
+			for (int i = 0; i < PaletteSize; i++)
+			{
+				alglib.rbfcreate(3, 1, out alglib.rbfmodel model);
+
+				// Set the appropriate value as 1.0
+				for (int j = 0; j < PaletteSize; j++)
+				{
+					if (j == i)
+					{
+						xy[j, 3] = 1.0;
+					}
+					else
+					{
+						xy[j, 3] = 0.0;
+					}
+				}
+
+				alglib.rbfsetpoints(model, xy);
+				alglib.rbfsetalgohierarchical(model, 1.0, 3, 0.0);
+				alglib.rbfbuildmodel(model, out alglib.rbfreport rep);
+
+				var v = alglib.rbfcalc3(model, palette[i].L, palette[i].a, palette[i].b);
+				RBFs.Add(model);
+			}
+
+			return RBFs;
 		}
 
 		/// <summary>
@@ -106,7 +163,7 @@ namespace ImageProcessing.Tools
 			double lTotal = 0;
 			double aTotal = 0;
 			double bTotal = 0;
-			
+
 			for (int i = 0; i < bin.Length; i++)
 			{
 				Color c = bin[i];
