@@ -29,7 +29,9 @@ Img.prototype.getPixels = function (x = 0, y = 0) {
 	flatData = this.context.getImageData(x, y, this.canvas.width(), this.canvas.height());
 
 	// Create pixel array
-	data = [];
+	data = flatData.data;
+
+	/*
 	for (var i = 0; i < flatData.data.length; i += 4) {
 		pixel = [];
 
@@ -44,8 +46,9 @@ Img.prototype.getPixels = function (x = 0, y = 0) {
 
 		data.push(pixel);
 	}
+	*/
 
-	this.pixels = data;
+	this.pixels = Array.from(data);
 
 	return data;
 };
@@ -54,16 +57,19 @@ Img.prototype.getPixels = function (x = 0, y = 0) {
 Img.prototype.setPalette = function (paletteSize) {
 	var self = this;
 
-	var url = "/api/palette";
+	var url = "api/palette/calc";
 
 	var data = {
-		pixels: JSON.stringify(this.pixels),
-		paletteSize: paletteSize
+		PixelData: this.pixels,
+		PaletteSize: paletteSize,
+		Width: this.canvas.width(),
+		Height: this.canvas.height()
 	};
 
 	// Set palette
-	var success = function (data) {
-		self.palette = data;
+	var success = function (result) {
+		console.log('Data received: ');
+		console.log(result);
 	};
 
 	// Error alert
@@ -76,13 +82,16 @@ Img.prototype.setPalette = function (paletteSize) {
 
 // Make an ajax call to the url, with the data stringified
 Img.prototype.ajax = function (url, data, success, error) {
+	console.log("Submitting form...");
 	$.ajax({
 		type: "POST",
 		url: url,
-		data: data,
+		data: JSON.stringify(data),
 		dataType: "json",
-		contentType: 'application/json',
+		contentType: "application/json; charset=utf-8",
 		success: success,
 		error: error
+	}).done(function () {
+		hideLoading();
 	});
 };

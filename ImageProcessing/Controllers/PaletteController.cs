@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ImageProcessing.DataObjects;
 using Microsoft.AspNetCore.Mvc;
-using ImageProcessing.DataObjects;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,17 +9,36 @@ namespace ImageProcessing.Controllers
 	[Route("api/palette")]
 	public class PaletteController : Controller
 	{
-		// POST: api/<controller>
-		[HttpPost]
-		public string Get()
+		public class PaletteInput
 		{
-			return String.Empty;
+			public List<int> PixelData
+			{
+				get; set;
+			}
+			public int PaletteSize
+			{
+				get; set;
+			}
+			public int Width
+			{
+				get; set;
+			}
+			public int Height
+			{
+				get; set;
+			}
 		}
 
-		// POST api/<controller>
+		// POST: api/<controller>/calc
 		[HttpPost]
-		public void Post([FromBody]string value)
+		[Route("/api/palette/calc")]
+		public IActionResult Post([FromBody]PaletteInput input)
 		{
+			Image image = Image.GetImageFromArray(input.PixelData, width: input.Width, height: input.Height);
+
+			image.SetPalette(input.PaletteSize);
+
+			return Json(image.Palette);
 		}
 	}
 }

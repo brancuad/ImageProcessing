@@ -113,16 +113,16 @@ namespace ImageProcessing.DataObjects
 		/// <returns></returns>
 		public static Image GetImageFromArray(List<int> pixelArray, int height = -1, int width = -1)
 		{
-			List<Pixel> pixels = GetPixelsFromArray(pixelArray);
+			List<Pixel> pixels = GetPixelsFromArray(pixelArray, height, width);
 			return new Image(pixels);
 		}
 
 		/// <summary>
 		/// Set the palette of the image
 		/// </summary>
-		public void SetPalette()
+		public void SetPalette(int paletteSize)
 		{
-			this.Palette = PaletteManager.GetPalette(this);
+			this.Palette = PaletteManager.GetPalette(this, paletteSize);
 			this.RBFs = PaletteManager.GetWeights(this.Palette);
 		}
 

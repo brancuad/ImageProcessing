@@ -15,6 +15,11 @@ namespace ImageProcessing.Tools
 		/// </summary>
 		public static int PaletteSize = 5;
 
+		/// <summary>
+		/// The number of bins in each histogram dimension
+		/// </summary>
+		public static int HistogramBinCount = 16;
+
 		private struct KMeansData
 		{
 			public List<Color> means;
@@ -25,8 +30,10 @@ namespace ImageProcessing.Tools
 		/// Get the palette of an image
 		/// </summary>
 		/// <param name="image"></param>
-		public static List<Color> GetPalette(Image image)
+		public static List<Color> GetPalette(Image image, int paletteSize)
 		{
+			PaletteManager.PaletteSize = paletteSize;
+
 			// Get data for kmeans clustering
 			KMeansData data = GetKMeansData(image.Pixels.Select(p => p.Color).ToList());
 
@@ -115,16 +122,37 @@ namespace ImageProcessing.Tools
 		private static KMeansData GetKMeansData(List<Color> pixels)
 		{
 			// Construct 3D List for 3D histogram of colors in image
-			List<List<List<Color[]>>> histogram = new List<List<List<Color[]>>>();
+			List<List<List<List<Color>>>> histogram = new List<List<List<List<Color>>>>();
+
+			// Initialize histogram with 16^3 bins
+			for (int i = 0; i < HistogramBinCount; i++)
+			{
+				List<List<List<Color>>> dim1 = new List<List<List<Color>>>();
+
+				for (int j = 0; j < HistogramBinCount; j++)
+				{
+					List<List<Color>> dim2 = new List<List<Color>>();
+
+					for (int k = 0; k < HistogramBinCount; k++)
+					{
+						List<Color> colors = new List<Color>();
+						dim2.Add(colors);
+					}
+
+					dim1.Add(dim2);
+				}
+
+				histogram.Add(dim1);
+			}
 
 			// Separate pixels into bins for each color channel
 			foreach (Color pixel in pixels)
 			{
-				int rBin = pixel.R / 16;
-				int gBin = pixel.G / 16;
-				int bBin = pixel.B / 16;
+				int rBin = pixel.R / HistogramBinCount;
+				int gBin = pixel.G / HistogramBinCount;
+				int bBin = pixel.B / HistogramBinCount;
 
-				histogram[rBin][gBin][bBin].Append(pixel);
+				histogram[rBin][gBin][bBin].Add(pixel);
 			}
 
 			// Get means of all bins in histogram
@@ -157,14 +185,14 @@ namespace ImageProcessing.Tools
 		/// </summary>
 		/// <param name="histogram"></param>
 		/// <returns></returns>
-		private static Color GetMeanColor(Color[] bin)
+		private static Color GetMeanColor(List<Color> bin)
 		{
 			// Average Lab values
 			double lTotal = 0;
 			double aTotal = 0;
 			double bTotal = 0;
 
-			for (int i = 0; i < bin.Length; i++)
+			for (int i = 0; i < bin.Count; i++)
 			{
 				Color c = bin[i];
 
@@ -173,9 +201,16 @@ namespace ImageProcessing.Tools
 				bTotal += c.b;
 			}
 
-			double lMean = lTotal / bin.Length;
-			double aMean = aTotal / bin.Length;
-			double bMean = bTotal / bin.Length;
+			double lMean = 0;
+			double aMean = 0;
+			double bMean = 0;
+
+			if (bin.Count > 0)
+			{
+				lMean = lTotal / bin.Count;
+				aMean = aTotal / bin.Count;
+				bMean = bTotal / bin.Count;
+			}
 
 			// Get Color from Lab value
 			return Color.GetColorFromLab(lMean, aMean, bMean);
@@ -186,16 +221,16 @@ namespace ImageProcessing.Tools
 		/// </summary>
 		/// <param name="histogram"></param>
 		/// <returns></returns>
-		private static List<Color> GetHistogramMeans(List<List<List<Color[]>>> histogram)
+		private static List<Color> GetHistogramMeans(List<List<List<List<Color>>>> histogram)
 		{
 			List<Color> means = new List<Color>();
 
 			// Iterate through every bin and get its mean
-			foreach (List<List<Color[]>> D2 in histogram)
+			foreach (List<List<List<Color>>> D2 in histogram)
 			{
-				foreach (List<Color[]> D1 in D2)
+				foreach (List<List<Color>> D1 in D2)
 				{
-					foreach (Color[] bin in D1)
+					foreach (List<Color> bin in D1)
 					{
 						// Calcluate Mean Color for bin
 						means.Add(GetMeanColor(bin));
@@ -212,7 +247,7 @@ namespace ImageProcessing.Tools
 		/// <param name="histogram"></param>
 		/// <param name="excluding"></param>
 		/// <returns></returns>
-		private static List<int> GetLargestBins(List<List<List<Color[]>>> histogram, List<int> excluding = null)
+		private static List<int> GetLargestBins(List<List<List<List<Color>>>> histogram, List<int> excluding = null)
 		{
 			List<int> largestBins = new List<int>();
 
@@ -238,10 +273,10 @@ namespace ImageProcessing.Tools
 						int bindex = k + (j * 16) + (i * (int)Math.Pow(16, 2));
 
 						// Find max size among non-excluded bins
-						if (histogram[i][j][k].Length > currentMaxSize && !excluding.Contains(bindex))
+						if (histogram[i][j][k].Count > currentMaxSize && !excluding.Contains(bindex))
 						{
 							currentLargest = bindex;
-							currentMaxSize = histogram[i][j][k].Length;
+							currentMaxSize = histogram[i][j][k].Count;
 						}
 					}
 				}

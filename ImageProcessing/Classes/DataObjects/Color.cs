@@ -23,7 +23,7 @@ namespace ImageProcessing.DataObjects
 		/// <summary>
 		/// Initialize with default (black) color
 		/// </summary>
-		public Color() : this(0, 0, 0, 255)
+		public Color()
 		{
 
 		}
@@ -42,9 +42,7 @@ namespace ImageProcessing.DataObjects
 			this.B = B;
 			this.A = A;
 
-			// Calcluate Lab
-			if (this == Color.Black)
-				SetLab();
+			SetLab();
 		}
 
 		/// <summary>
@@ -53,9 +51,9 @@ namespace ImageProcessing.DataObjects
 		/// <param name="color"></param>
 		private static Tuple<double, double, double> CalcluateLab(Color color)
 		{
-			double r = color.R / 255;
-			double g = color.G / 255;
-			double b = color.B / 255;
+			double r = (double)color.R / 255;
+			double g = (double)color.G / 255;
+			double b = (double)color.B / 255;
 
 			double x, y, z;
 
@@ -67,9 +65,9 @@ namespace ImageProcessing.DataObjects
 			y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
 			z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
 
-			x = (x > 0.008856) ? Math.Pow(x, 1 / 3) : (7.787 * x) + 16 / 116;
-			y = (y > 0.008856) ? Math.Pow(y, 1 / 3) : (7.787 * y) + 16 / 116;
-			z = (z > 0.008856) ? Math.Pow(z, 1 / 3) : (7.787 * z) + 16 / 116;
+			x = (x > 0.008856) ? Math.Pow(x, 1.0 / 3.0) : (7.787 * x) + 16 / 116.0;
+			y = (y > 0.008856) ? Math.Pow(y, 1.0 / 3.0) : (7.787 * y) + 16 / 116.0;
+			z = (z > 0.008856) ? Math.Pow(z, 1.0 / 3.0) : (7.787 * z) + 16 / 116.0;
 
 			return new Tuple<double, double, double>((116 * y) - 16, 500 * (x - y), 200 * (y - z));
 		}
@@ -83,9 +81,9 @@ namespace ImageProcessing.DataObjects
 		/// <returns></returns>
 		public static Color GetColorFromLab(double L, double a, double b)
 		{
-			double y = (L + 16) / 116;
-			double x = a / 500 + y;
-			double z = y - b / 200;
+			double y = (L + 16) / 116.0;
+			double x = a / 500.0 + y;
+			double z = y - b / 200.0;
 			double R, G, B;
 
 			x = 0.95047 * ((x * x * x > 0.008856) ? x * x * x : (x - 16 / 116) / 7.787);
