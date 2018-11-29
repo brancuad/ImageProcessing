@@ -46,6 +46,23 @@ namespace ImageProcessing.DataObjects
 		}
 
 		/// <summary>
+		/// Initialize with specific Lab color
+		/// </summary>
+		/// <param name="L"></param>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <param name="A"></param>
+		public Color(double L, double a, double b, int A = 255)
+		{
+			this.L = L;
+			this.a = a;
+			this.b = b;
+			this.A = A;
+
+			SetRGB();
+		}
+
+		/// <summary>
 		/// Calculate Color in Lab color space. Derived from color.js.
 		/// </summary>
 		/// <param name="color"></param>
@@ -75,11 +92,8 @@ namespace ImageProcessing.DataObjects
 		/// <summary>
 		/// Get a Color object from Lab values
 		/// </summary>
-		/// <param name="L"></param>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
 		/// <returns></returns>
-		public static Color GetColorFromLab(double L, double a, double b)
+		public void SetRGB()
 		{
 			double y = (L + 16) / 116.0;
 			double x = a / 500.0 + y;
@@ -98,11 +112,11 @@ namespace ImageProcessing.DataObjects
 			G = (G > 0.0031308) ? (1.055 * Math.Pow(G, 1 / 2.4) - 0.055) : 12.92 * G;
 			B = (B > 0.0031308) ? (1.055 * Math.Pow(B, 1 / 2.4) - 0.055) : 12.92 * B;
 
-			R = Math.Max(0, Math.Min(1, R)) * 255;
-			G = Math.Max(0, Math.Min(1, G)) * 255;
-			B = Math.Max(0, Math.Min(1, B)) * 255;
+			this.R = (int)Math.Round(Math.Max(0, Math.Min(1, R)) * 255);
+			this.G = (int)Math.Round(Math.Max(0, Math.Min(1, G)) * 255);
+			this.B = (int)Math.Round(Math.Max(0, Math.Min(1, B)) * 255);
 
-			return new Color((int)Math.Round(R), (int)Math.Round(G), (int)Math.Round(B));
+
 		}
 
 		/// <summary>
@@ -236,6 +250,20 @@ namespace ImageProcessing.DataObjects
 		/// <returns></returns>
 		public static bool operator ==(Color left, Color right)
 		{
+			// If left hand side is null...
+			if (System.Object.ReferenceEquals(right, null))
+			{
+				// ...and right hand side is null...
+				if (System.Object.ReferenceEquals(left, null))
+				{
+					//...both are null and are Equal.
+					return true;
+				}
+
+				// ...right hand side is not null, therefore not Equal.
+				return false;
+			}
+
 			return left.Equals(right);
 		}
 
@@ -247,7 +275,7 @@ namespace ImageProcessing.DataObjects
 		/// <returns></returns>
 		public static bool operator !=(Color left, Color right)
 		{
-			return !left.Equals(right);
+			return !(left == right);
 		}
 	}
 }

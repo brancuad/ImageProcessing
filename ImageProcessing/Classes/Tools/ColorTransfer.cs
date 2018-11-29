@@ -78,7 +78,7 @@ namespace ImageProcessing.Tools
 
 			total = DenseVector.OfArray(new double[] { color.L, total[1], total[2] });
 
-			Color newColor = Color.GetColorFromLab(color.L, total[1], total[2]);
+			Color newColor = new Color(L: color.L, a: total[1], b: total[2]);
 			return newColor;
 		}
 
@@ -114,7 +114,7 @@ namespace ImageProcessing.Tools
 
 			Vector<double> x_b = DenseVector.OfArray(new double[] { 0, 0 });
 			// near case
-			if (Color.GetColorFromLab(L, x_0[0], x_0[1]).OutOfGamut())
+			if (new Color(L, x_0[0], x_0[1]).OutOfGamut())
 			{
 				// Find where the line from C_prime to x_0
 				// intersects with the gamut boundary
@@ -145,12 +145,12 @@ namespace ImageProcessing.Tools
 			Vector<double> x_prime = x_ab.Add(u.Multiply(dist * min_result));
 
 			// Return x', using the new color's luminance
-			Color result = Color.GetColorFromLab(L, x_prime[0], x_prime[1]);
+			Color result = new Color(L, x_prime[0], x_prime[1]);
 
 			if (result.OutOfGamut())
 			{
 				Vector<double> result_ab = GamutIntersect(x_ab, x_prime, L);
-				result = Color.GetColorFromLab(L, result_ab[0], result_ab[1]);
+				result = new Color(L, result_ab[0], result_ab[1]);
 			}
 
 			return result.ToVector(Lab: true);
@@ -197,7 +197,7 @@ namespace ImageProcessing.Tools
 				currentColor[0] = prevColor[0] + da;
 				currentColor[1] = prevColor[1] + db;
 
-				Color color = Color.GetColorFromLab((int)Math.Round(L), (int)Math.Round(currentColor[0]), (int)Math.Round(currentColor[1]));
+				Color color = new Color(L, currentColor[0], currentColor[1]);
 
 				if (color.OutOfGamut())
 				{

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Accord.MachineLearning;
 
 namespace ImageProcessing.Tools
 {
@@ -39,25 +40,32 @@ namespace ImageProcessing.Tools
 
 			// Format color data for KMeans (using Lab color space)
 			double[][] formattedData = FormatData(data.means);
+			double[][] centroids = FormatData(data.centroids);
 
 			// Perform KMeans w/additional black datapoint
-			int[] centers = KMeans.Cluster(formattedData, PaletteSize + 1);
+			Accord.MachineLearning.KMeans kMeans = new Accord.MachineLearning.KMeans(PaletteSize + 1);
+			kMeans.Centroids = centroids;
+
+			var clusters = kMeans.Learn(formattedData);
+
+			int[] labels = clusters.Decide(formattedData);
 
 			// Get palette values
-			List<Color> palette = new List<Color>();
+			double[][] doublePalette = kMeans.Centroids;
+			List<Color> Palette = new List<Color>();
 
-			foreach (int index in centers)
+			foreach(double[] lab in doublePalette)
 			{
-				palette.Add(data.means[index]);
+				Palette.Add(new Color(L: lab[0], a: lab[1], b: lab[2]));
 			}
 
 			// Sort palette by luminance
-			palette = palette.OrderBy(p => p.L).ToList();
+			Palette = Palette.OrderBy(p => p.L).ToList();
 
 			// Take all actual palette members
-			palette = palette.Take(PaletteSize).ToList();
+			Palette = Palette.TakeLast(PaletteSize).ToList();
 
-			return palette;
+			return Palette;
 		}
 
 		/// <summary>
@@ -169,8 +177,8 @@ namespace ImageProcessing.Tools
 				centroids.Add(means[bin]);
 			}
 
-			// Add black to the centroids
-			centroids.Add(Color.Black);
+			// Add Black color to the centroids
+			centroids.Add(new Color());
 
 			// Return KMeansData containing means and centroids
 			return new KMeansData()
@@ -211,9 +219,13 @@ namespace ImageProcessing.Tools
 				aMean = aTotal / bin.Count;
 				bMean = bTotal / bin.Count;
 			}
+			else
+			{
+				return null;
+			}
 
 			// Get Color from Lab value
-			return Color.GetColorFromLab(lMean, aMean, bMean);
+			return new Color(L: lMean, a: aMean, b: bMean);
 		}
 
 		/// <summary>
@@ -233,6 +245,7 @@ namespace ImageProcessing.Tools
 					foreach (List<Color> bin in D1)
 					{
 						// Calcluate Mean Color for bin
+						Color mean = GetMeanColor(bin);
 						means.Add(GetMeanColor(bin));
 					}
 				}
@@ -245,18 +258,18 @@ namespace ImageProcessing.Tools
 		/// Recursive function to find k largest bins
 		/// </summary>
 		/// <param name="histogram"></param>
-		/// <param name="excluding"></param>
+		/// <param name="largestBins"></param>
 		/// <returns></returns>
-		private static List<int> GetLargestBins(List<List<List<List<Color>>>> histogram, List<int> excluding = null)
+		private static List<int> GetLargestBins(List<List<List<List<Color>>>> histogram, List<int> largestBins = null)
 		{
-			List<int> largestBins = new List<int>();
+			List<int> LargestBins = largestBins;
 
-			if (excluding == null)
-				excluding = new List<int>();
+			if (LargestBins == null)
+				LargestBins = new List<int>();
 
 			// No more searching needed
-			if (excluding.Count >= PaletteSize)
-				return new List<int>();
+			if (LargestBins.Count >= PaletteSize)
+				return LargestBins;
 
 			// Set values to surpass
 			int currentLargest = int.MinValue;
@@ -273,7 +286,7 @@ namespace ImageProcessing.Tools
 						int bindex = k + (j * 16) + (i * (int)Math.Pow(16, 2));
 
 						// Find max size among non-excluded bins
-						if (histogram[i][j][k].Count > currentMaxSize && !excluding.Contains(bindex))
+						if (histogram[i][j][k].Count > currentMaxSize && !LargestBins.Contains(bindex))
 						{
 							currentLargest = bindex;
 							currentMaxSize = histogram[i][j][k].Count;
@@ -283,10 +296,10 @@ namespace ImageProcessing.Tools
 			}
 
 			// Set largest bins
-			largestBins.Add(currentLargest);
+			LargestBins.Add(currentLargest);
 
 			// Return along with next largest
-			return largestBins.Concat(GetLargestBins(histogram, excluding: largestBins)) as List<int>;
+			return GetLargestBins(histogram, largestBins: LargestBins);
 		}
 
 		/// <summary>
@@ -296,11 +309,18 @@ namespace ImageProcessing.Tools
 		/// <returns></returns>
 		private static double[][] FormatData(List<Color> data)
 		{
-			double[][] formatted = new double[data.Count][];
+			double[][] formatted = new double[0][];
 
 			foreach (Color color in data)
 			{
-				formatted.Append(new double[] { color.L, color.a, color.b });
+				if (color == null)
+				{
+					formatted = formatted.Append(new double[3]).ToArray();
+				}
+				else
+				{
+					formatted = formatted.Append(new double[] { color.L, color.a, color.b }).ToArray();
+				}
 			}
 
 			return formatted;

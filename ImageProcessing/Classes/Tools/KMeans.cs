@@ -7,7 +7,7 @@ namespace ImageProcessing.Tools
 	/// </summary>
 	public static class KMeans
 	{
-		public static int[] Cluster(double[][] rawData, int numClusters)
+		public static int[] Cluster(double[][] rawData, int numClusters, int[] centroids)
 		{
 			// k-means clustering
 			// index of return is tuple ID, cell is cluster ID
