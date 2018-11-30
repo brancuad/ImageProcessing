@@ -33,19 +33,9 @@ $(document).ready(function () {
 			});
 
 			$("#transfer").mousedown(showLoading).mouseup(function () {
+				var newPalette = origin.getNewPalette();
 
-				var recolorPixels = origin.recolor(origin.getNewPalette());
-
-				// Use original pixels for now
-				// var recolorPixels = origin.pixels;
-				var flatPixels = origin.flattenPixels(recolorPixels);
-
-				var imgData = output.getTransferData(flatPixels);
-
-				output.putImageData(imgData);
-
-
-				hideLoading();
+				origin.recolor(newPalette, output);
 			});
 		};
 

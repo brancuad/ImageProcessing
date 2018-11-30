@@ -1,6 +1,7 @@
 ﻿using ImageProcessing.DataObjects;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ImageProcessing.Tools;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,7 +39,11 @@ namespace ImageProcessing.Controllers
 
 			image.SetPalette(input.PaletteSize);
 
-			return Json(image.Palette);
+			Image.CurrentImage = image;
+
+			double[][] formattedPalette = PaletteManager.FormatData(image.Palette, rgb: true);
+
+			return Json(formattedPalette);
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace ImageProcessing.Tools
 		/// </summary>
 		/// <param name="image"></param>
 		/// <param name="newPalette"></param>
-		public static Image Transfer(Image image, List<Color> newPalette)
+		public static List<Pixel> Transfer(Image image, List<Color> newPalette)
 		{
 			// Iterate through all pixels and transfer each color
 			for (int i = 0; i < image.Pixels.Count; i++)
@@ -26,10 +26,10 @@ namespace ImageProcessing.Tools
 
 				Color newColor = TransferColor(image, color, newPalette);
 
-				image.Pixels[i].Color = color;
+				image.Pixels[i].Color = newColor;
 			}
 
-			return image;
+			return image.Pixels;
 		}
 
 		/// <summary>
@@ -45,7 +45,15 @@ namespace ImageProcessing.Tools
 
 			for (int i = 0; i < PaletteManager.PaletteSize; i++)
 			{
-				weights[i] = alglib.rbfcalc3(image.RBFs[i], color.L, color.a, color.b);
+				try
+				{
+					weights[i] = alglib.rbfcalc3(image.RBFs[i], color.L, color.a, color.b);
+				}
+				catch
+				{
+					// Nuthin
+				}
+
 
 				if (weights[i] < 0)
 				{
@@ -60,7 +68,7 @@ namespace ImageProcessing.Tools
 				weights[i] = weights[i] / weightSum;
 			}
 
-			Vector<double> total = DenseVector.OfArray(new double[] { 0, 0 });
+			Vector<double> total = DenseVector.OfArray(new double[] { 0, 0, 0 });
 
 			// Apply weights to result of transfer function
 			for (int i = 0; i < PaletteManager.PaletteSize; i++)
@@ -178,7 +186,7 @@ namespace ImageProcessing.Tools
 
 			bool outOfBounds = false;
 			Vector<double> prevColor = DenseVector.OfArray(new double[] { 0, 0 });
-			Vector<double> currentColor = null;
+			Vector<double> currentColor = DenseVector.OfArray(new double[] { 0, 0 });
 			C_ab.CopyTo(currentColor);
 
 			if (x != null)
@@ -209,6 +217,24 @@ namespace ImageProcessing.Tools
 			Vector<double> C_b = prevColor;
 
 			return C_b;
+		}
+
+
+		/// <summary>
+		/// Format the Palete delivered from the client
+		/// </summary>
+		/// <param name="NewPalette"></param>
+		/// <returns></returns>
+		public static List<Color> FormatPalette(List<double[]> NewPalette)
+		{
+			List<Color> Palette = new List<Color>();
+
+			foreach (double[] c in NewPalette)
+			{
+				Palette.Add(new Color((int)c[0], (int)c[1], (int)c[2]));
+			}
+
+			return Palette;
 		}
 	}
 }

@@ -10,6 +10,8 @@ namespace ImageProcessing.DataObjects
 	{
 		public static Dictionary<string, Image> SavedImages = new Dictionary<string, Image>();
 
+		public static Image CurrentImage;
+
 		/// <summary>
 		/// List of editted versions of this image
 		/// </summary>
@@ -132,8 +134,27 @@ namespace ImageProcessing.DataObjects
 		/// <param name="newPalette"></param>
 		public void TransferPalette(List<Color> newPalette)
 		{
-			ColorTransfer.Transfer(this, newPalette);
+			this.Pixels = ColorTransfer.Transfer(this, newPalette);
 			this.Palette = newPalette;
+		}
+
+		/// <summary>
+		/// Get the array for the canvas from the image
+		/// </summary>
+		/// <returns></returns>
+		public List<int> GetPixelArray()
+		{
+			List<int> pixelArray = new List<int>();
+
+			foreach (Pixel pixel in this.Pixels)
+			{
+				pixelArray.Add(pixel.Color.R);
+				pixelArray.Add(pixel.Color.G);
+				pixelArray.Add(pixel.Color.B);
+				pixelArray.Add(pixel.Color.A);
+			}
+
+			return pixelArray;
 		}
 
 	}

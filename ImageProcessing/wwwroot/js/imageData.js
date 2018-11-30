@@ -1,4 +1,5 @@
 ﻿/// <reference path="jquery-3.3.1.js" />
+/// <reference path="Original/jqColor.js" />
 
 // Img class to store images in javascript
 
@@ -56,20 +57,23 @@ Img.prototype.getPixels = function (x = 0, y = 0) {
 // Use an ajax call to set the palette of the image
 Img.prototype.setPalette = function (paletteSize) {
 	var self = this;
+	self.paletteSize = paletteSize;
 
 	var url = "api/palette/calc";
 
 	var data = {
 		PixelData: this.pixels,
 		PaletteSize: paletteSize,
-		Width: this.canvas.width(),
-		Height: this.canvas.height()
+		Width: Math.round(this.canvas.width()),
+		Height: Math.round(this.canvas.height())
 	};
 
 	// Set palette
 	var success = function (result) {
 		console.log('Data received: ');
 		console.log(result);
+		self.palette = result;
+		self.showPalette();
 	};
 
 	// Error alert
@@ -78,6 +82,86 @@ Img.prototype.setPalette = function (paletteSize) {
 	};
 
 	this.ajax(url, data, success, error);
+};
+
+Img.prototype.showPalette = function () {
+	colorPickerInit(jQuery, window);
+
+	var palette = this.palette;
+
+	$("input.color").remove();
+
+	var rgbString = function (rgba) {
+		return "rgb(" + parseInt(rgba[0]) + ", " + parseInt(rgba[1]) + ", " + parseInt(rgba[2]) + ")";
+	};
+
+	for (var i = 0; i < palette.length; i++) {
+
+		var colorElement = $("<input></input>")
+			.attr("id", "originColor" + (i + 1))
+			.attr("type", "button")
+			.addClass("color");
+
+		$("#colorContainer").append(colorElement);
+
+		colorElement.val(rgbString(palette[i]));
+		colorElement.css("background-color", rgbString(palette[i]));
+		colorElement.colorPicker();
+	}
+};
+
+Img.prototype.getNewPalette = function () {
+	var stringtoRgb = function (rgbString) {
+		var rgb = rgbString.replace(/[^\d,]/g, '').split(',');
+
+		for (var i in rgb) {
+			rgb[i] = parseInt(rgb[i]);
+		}
+
+		return rgb;
+	};
+
+	newPalette = [];
+
+	for (var i = 1; i <= this.paletteSize; i++) {
+		var color = $("#originColor" + i).css("backgroundColor");
+		var rgb = stringtoRgb(color);
+		newPalette.push(rgb);
+	}
+
+	return newPalette;
+};
+
+// Use ajax call to recolor the image
+Img.prototype.recolor = function (newPalette, output) {
+	var self = this;
+
+	var url = "api/transfer";
+
+	var data = {
+		NewPalette: newPalette
+	};
+
+	var success = function (result) {
+		imgData = output.context.createImageData(output.canvas.width(), output.canvas.height());
+
+		for (var i = 0; i < result.length; i++) {
+			imgData.data[i] = result[i];
+		}
+
+		output.context.putImageData(imgData, x = 0, y = 0);
+
+		hideLoading();
+	};
+
+	var error = function (data) {
+		alert("Oh no!");
+
+		hideLoading();
+	};
+
+	this.ajax(url, data, success, error);
+
 };
 
 // Make an ajax call to the url, with the data stringified

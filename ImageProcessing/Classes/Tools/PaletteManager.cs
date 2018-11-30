@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Accord.MachineLearning;
 
 namespace ImageProcessing.Tools
 {
@@ -54,7 +53,7 @@ namespace ImageProcessing.Tools
 			double[][] doublePalette = kMeans.Centroids;
 			List<Color> Palette = new List<Color>();
 
-			foreach(double[] lab in doublePalette)
+			foreach (double[] lab in doublePalette)
 			{
 				Palette.Add(new Color(L: lab[0], a: lab[1], b: lab[2]));
 			}
@@ -305,9 +304,9 @@ namespace ImageProcessing.Tools
 		/// <summary>
 		/// Format KMeansData for use in algorithm. With Lab color space.
 		/// </summary>
-		/// <param name=""></param>
+		/// <param name="rgb">Format using RGB</param>
 		/// <returns></returns>
-		private static double[][] FormatData(List<Color> data)
+		public static double[][] FormatData(List<Color> data, bool rgb = false)
 		{
 			double[][] formatted = new double[0][];
 
@@ -316,6 +315,10 @@ namespace ImageProcessing.Tools
 				if (color == null)
 				{
 					formatted = formatted.Append(new double[3]).ToArray();
+				}
+				else if (rgb)
+				{
+					formatted = formatted.Append(new double[] { color.R, color.G, color.B }).ToArray();
 				}
 				else
 				{
