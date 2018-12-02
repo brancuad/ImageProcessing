@@ -100,7 +100,7 @@ var hideLoading = function () {
 };
 
 // origin image struct
-var origin = {
+var display = {
 	img: new Image(),
 	paletteSize: 5,
 	pixels: null,
@@ -291,7 +291,7 @@ var origin = {
 			}
 		};
 
-		var data = origin.getKmeansData();
+		var data = display.getKmeansData();
 		var kmeansPoints = data.points;
 
 		// The 6th cluster will always filter out the darkest cluster (closest to black)
@@ -614,9 +614,9 @@ $(document).ready(function () {
 	// Initialize colorPicker
 	colorPickerInit(jQuery, window);
 
-	origin.canvas = $("#origin");
+	display.canvas = $("#origin");
 	output.canvas = $("#output");
-	origin.context = origin.canvas[0].getContext('2d');
+	display.context = display.canvas[0].getContext('2d');
 	output.context = output.canvas[0].getContext('2d');
 
 
@@ -624,32 +624,32 @@ $(document).ready(function () {
 
 	function make_base() {
 
-		origin.img.onload = function () {
+		display.img.onload = function () {
 			// draw image in canvas
-			origin.drawImage();
+			display.drawImage();
 
 			$("#calc").mousedown(showLoading).mouseup(function () {
 
 				// get image array
-				origin.pixels = origin.getImageData();
+				display.pixels = display.getImageData();
 
-				origin.paletteSize = $("input[name=kPicker]:checked").val();
-				origin.palette = origin.getPalette();
+				display.paletteSize = $("input[name=kPicker]:checked").val();
+				display.palette = display.getPalette();
 
-				origin.weights = origin.getWeights();
+				display.weights = display.getWeights();
 
-				origin.showPalette();
+				display.showPalette();
 
 				hideLoading();
 			});
 
 			$("#transfer").mousedown(showLoading).mouseup(function () {
 
-				var recolorPixels = origin.recolor(origin.getNewPalette());
+				var recolorPixels = display.recolor(display.getNewPalette());
 
 				// Use original pixels for now
 				// var recolorPixels = origin.pixels;
-				var flatPixels = origin.flattenPixels(recolorPixels);
+				var flatPixels = display.flattenPixels(recolorPixels);
 
 				var imgData = output.getTransferData(flatPixels);
 
@@ -660,10 +660,10 @@ $(document).ready(function () {
 			});
 		};
 
-		origin.img.src = $("#imgSelect").val();
+		display.img.src = $("#imgSelect").val();
 
 		$("#imgSelect").change(function () {
-			origin.img.src = $(this).val();
+			display.img.src = $(this).val();
 		});
 	}
 });

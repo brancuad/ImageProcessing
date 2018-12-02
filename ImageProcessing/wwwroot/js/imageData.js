@@ -99,15 +99,74 @@ Img.prototype.showPalette = function () {
 
 		var colorElement = $("<input></input>")
 			.attr("id", "originColor" + (i + 1))
+			.attr("class", "paletteColor")
 			.attr("type", "button")
 			.addClass("color");
 
-		$("#colorContainer").append(colorElement);
+		var targetElement = $("<input></input>")
+			.attr("id", "targetColor" + (i + 1))
+			.attr("class", "paletteColor")
+			.attr("type", "button")
+			.addClass("color");
 
-		colorElement.val(rgbString(palette[i]));
+		$("#original_palette").append(colorElement);
+		$("#target_palette").append(targetElement);
+
 		colorElement.css("background-color", rgbString(palette[i]));
-		colorElement.colorPicker();
+
+		targetElement.css("background-color", rgbString(palette[i]));
+		targetElement.colorPicker();
 	}
+};
+
+
+Img.prototype.showSuggestions = function () {
+	var palette = this.palette;
+
+	$(".apply > input.color").remove();
+
+	var rgbString = function (rgba) {
+		return "rgb(" + parseInt(rgba[0]) + ", " + parseInt(rgba[1]) + ", " + parseInt(rgba[2]) + ")";
+	};
+
+	for (var i = 0; i < palette.length; i++) {
+
+		var apply1Element = $("<input></input>")
+			.attr("id", "suggest1" + (i + 1))
+			.attr("class", "paletteColor")
+			.attr("type", "button")
+			.addClass("color");
+
+		var apply2Element = $("<input></input>")
+			.attr("id", "suggest2" + (i + 1))
+			.attr("class", "paletteColor")
+			.attr("type", "button")
+			.addClass("color");
+
+		var apply3Element = $("<input></input>")
+			.attr("id", "suggest3" + (i + 1))
+			.attr("class", "paletteColor")
+			.attr("type", "button")
+			.addClass("color");
+
+		var apply4Element = $("<input></input>")
+			.attr("id", "suggest4" + (i + 1))
+			.attr("class", "paletteColor")
+			.attr("type", "button")
+			.addClass("color");
+
+		$("#suggestion_1").append(apply1Element);
+		$("#suggestion_2").append(apply2Element);
+		$("#suggestion_3").append(apply3Element);
+		$("#suggestion_4").append(apply4Element);
+
+		apply1Element.css("background-color", rgbString(palette[i]));
+		apply2Element.css("background-color", rgbString(palette[i]));
+		apply3Element.css("background-color", rgbString(palette[i]));
+		apply4Element.css("background-color", rgbString(palette[i]));
+	}
+
+	$("#suggestion_container").show();
 };
 
 Img.prototype.getNewPalette = function () {
@@ -124,7 +183,7 @@ Img.prototype.getNewPalette = function () {
 	newPalette = [];
 
 	for (var i = 1; i <= this.paletteSize; i++) {
-		var color = $("#originColor" + i).css("backgroundColor");
+		var color = $("#targetColor" + i).css("backgroundColor");
 		var rgb = stringtoRgb(color);
 		newPalette.push(rgb);
 	}
@@ -162,6 +221,34 @@ Img.prototype.recolor = function (newPalette, output) {
 
 	this.ajax(url, data, success, error);
 
+};
+
+Img.prototype.reset = function (output) {
+	var self = this;
+
+	var url = "api/reset";
+
+	var data = null;
+
+	var success = function (result) {
+		imgData = output.context.createImageData(output.canvas.width(), output.canvas.height());
+
+		for (var i = 0; i < result.length; i++) {
+			imgData.data[i] = result[i];
+		}
+
+		output.context.putImageData(imgData, x = 0, y = 0);
+
+		hideLoading();
+	};
+
+	var error = function (data) {
+		alert("Oh no!!");
+
+		hideLoading();
+	};
+
+	this.ajax(url, data, success, error);
 };
 
 // Make an ajax call to the url, with the data stringified

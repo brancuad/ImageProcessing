@@ -19,17 +19,19 @@ namespace ImageProcessing.Tools
 		/// <param name="newPalette"></param>
 		public static List<Pixel> Transfer(Image image, List<Color> newPalette)
 		{
+			List<Pixel> NewPixels = new List<Pixel>();
+
 			// Iterate through all pixels and transfer each color
-			for (int i = 0; i < image.Pixels.Count; i++)
+			for (int i = 0; i < image.OriginalPixels.Count; i++)
 			{
-				Color color = image.Pixels[i].Color;
+				Color color = image.OriginalPixels[i].Color;
 
 				Color newColor = TransferColor(image, color, newPalette);
 
-				image.Pixels[i].Color = newColor;
+				NewPixels.Add(new Pixel(image.OriginalPixels[i].Position, newColor));
 			}
 
-			return image.Pixels;
+			return NewPixels;
 		}
 
 		/// <summary>
@@ -53,7 +55,6 @@ namespace ImageProcessing.Tools
 				{
 					// Nuthin
 				}
-
 
 				if (weights[i] < 0)
 				{

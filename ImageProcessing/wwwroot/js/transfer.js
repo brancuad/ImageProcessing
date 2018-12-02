@@ -4,45 +4,64 @@
 // Front End for Transfer.cshtml
 
 var showLoading = function () {
-	$("#loading").show();
+	display.canvas.fadeTo("medium", .3);
 };
 
 var hideLoading = function () {
-	$("#loading").hide();
+	display.canvas.fadeTo("fast", 1);
+};
+
+var display;
+
+var readFile = function (e) {
+	var reader = new FileReader();
+
+	reader.onload = function (event) {
+
+		display.image.onload = function () {
+			// draw image in canvas
+			display.draw();
+
+			$("#calc").mousedown(showLoading).mouseup(function () {
+				// Hide suggestions. No longer applicable
+				$("#suggestion_container").hide();
+
+				// set pixel array
+				display.getPixels();
+
+				paletteSize = $("input[name=kPicker]:checked").val();
+				display.setPalette(paletteSize);
+			});
+
+			$("#transfer").mousedown(showLoading).mouseup(function () {
+				var newPalette = display.getNewPalette();
+
+				display.recolor(newPalette, display);
+			});
+
+			$("#suggest").mousedown(showLoading).mouseup(function () {
+				display.showSuggestions();
+				hideLoading();
+			});
+
+			$("#reset").mousedown(showLoading).mouseup(function () {
+				display.reset(display);
+			});
+		};
+
+		display.image.src = event.target.result;
+	};
+
+	reader.readAsDataURL(e.target.files[0]);
 };
 
 $(document).ready(function () {
 
-	var origin = new Img($("#origin"));
-	var output = new Img($("#output"));
+	display = new Img($("#display"));
 
-	make_base();
+	$("#file_button").change(readFile);
 
-	function make_base() {
-
-		origin.image.onload = function () {
-			// draw image in canvas
-			origin.draw();
-
-			$("#calc").mousedown(showLoading).mouseup(function () {
-				// set pixel array
-				origin.getPixels();
-
-				paletteSize = $("input[name=kPicker]:checked").val();
-				origin.setPalette(paletteSize);
-			});
-
-			$("#transfer").mousedown(showLoading).mouseup(function () {
-				var newPalette = origin.getNewPalette();
-
-				origin.recolor(newPalette, output);
-			});
-		};
-
-		origin.image.src = $("#imgSelect").val();
-
-		$("#imgSelect").change(function () {
-			origin.image.src = $(this).val();
-		});
-	}
+	$("#upload").click(function () {
+		$("#file_button").click();
+	});
 });

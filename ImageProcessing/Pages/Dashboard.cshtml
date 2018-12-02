@@ -1,0 +1,161 @@
+﻿@page
+@model ImageProcessing.Pages.DashboardModel
+@{
+	ViewData["Title"] = "Dashboard";
+}
+
+<head>
+	<script src="~/js/jquery-3.3.1.js"></script>
+	<script src="~/js/Original/jqColor.js"></script>
+	<script src="~/js/Original/color.all.min.js"></script>
+
+	<script src="~/js/imageData.js"></script>
+	<script src="~/js/transfer.js"></script>
+
+	<link rel="stylesheet" href="~/css/dashboard.css" />
+	<link rel="stylesheet" href="~/css/jqColor.css" />
+</head>
+<body>
+
+	<div id="dashboard">
+		<div id="row1" class="section_row">
+			<table id="row1_table" class="inner_table">
+				<tr class="inner_row">
+					<td class="inner_cell">
+						<div id="palette_tools" class="inner_table">
+
+							<div class="inner_row">
+
+								<!-- Palette Section -->
+								<div id="palette_container" class="section">
+									<div class="section_header">Palette Editor</div>
+									<div>Choose Palette Size:</div>
+									<div id="k_container">
+										<input id="kPicker3" type="radio" name="kPicker" value="3" />
+										<label for="kPicker3">3</label>
+										<input id="kPicker4" type="radio" name="kPicker" value="4" />
+										<label for="kPicker4">4</label>
+										<input id="kPicker5" type="radio" name="kPicker" value="5" checked="checked" />
+										<label for="kPicker5">5</label>
+										<input id="kPicker6" type="radio" name="kPicker" value="6" />
+										<label for="kPicker6">6</label>
+									</div>
+									<div id="calc_container">
+										<input id="calc" class="btn" type="button" value="Calculate" />
+									</div>
+									<div id="palette_selector_container" class="inner_table">
+										<div class="inner_row">
+											<div id="original_palette" class="inner_cell"><div>Old</div></div>
+											<div id="target_palette" class="inner_cell"><div>New</div></div>
+										</div>
+									</div>
+
+									<div id="transfer_container">
+										<input id="reset" class="btn" type="button" value="Reset" />
+										<input id="transfer" class="btn" type="button" value="Transfer" />
+									</div>
+								</div>
+
+								<!-- Suggestions Section -->
+								<div id="tools_container" class="section">
+									<div class="section_header">Palette Suggestions</div>
+									<div>(Feature To Be Added)</div>
+									<input type="button" class="btn" id="suggest" value="Get Suggestions" />
+
+									<div id="suggestion_container" class="inner_table">
+										<div class="inner_row">
+											<div id="suggestion_1" class="inner_cell">
+												<div>
+													<input id="apply_1" class="btn apply" type="button" value="Apply" />
+												</div>
+											</div>
+											<div id="suggestion_2" class="inner_cell">
+												<div>
+													<input id="apply_2" class="btn apply" type="button" value="Apply" />
+												</div>
+											</div>
+										</div>
+
+										<div class="inner_row">
+											<div id="suggestion_3" class="inner_cell">
+												<div>
+													<input id="apply_3" class="btn apply" type="button" value="Apply" />
+												</div>
+											</div>
+											<div id="suggestion_4" class="inner_cell">
+												<div>
+													<input id="apply_4" class="btn apply" type="button" value="Apply" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
+						</div>
+					</td>
+					<td id="image_display" class="section">
+						<button id="upload" class="btn">Upload an image</button>
+						<input id="file_button" type="file" />
+						<div id="loading"><canvas id="display" class="display" height="400" width="400"></canvas></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="row2" class="section_row" style="display: none">
+			<div id="row2_table" class="inner_table">
+				<div class="section"></div>
+				<div class="section"></div>
+				<div class="inner_cell">
+					<div class="inner_table">
+						<div class="section_row">
+							<div class="section"></div>
+						</div>
+						<div class="section_row"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--
+	<div id="content">
+		<div id="originalImage" class="imageContainer">
+			<canvas id="origin" class="imageDisplay" height="400" width="400"></canvas>
+			<canvas id="originHist" class="imageDisplay" height="400" width="400" style="display: none"></canvas>
+		</div>
+
+		<div id="paletteContainer">
+			<img id="loading" src="../images/loading.gif" />
+			<select id="imgSelect" name="images">
+				<option value="../images/sky.jpg">Pretty Sky</option>
+				<option value="../images/castle.jpg">Disney Castle</option>
+				<option value="../images/flower.jpg">Flower</option>
+				<option value="../images/forest.jpg">Forest</option>
+				<option value="../images/test.png">Woman</option>
+				<option value="../images/icecream.jpg">Ice Cream</option>
+			</select>
+			<button id="calc" class="actionBtn">Calculate Palette</button>
+			<div id="colorContainer">
+				<input id="kPicker3" type="radio" name="kPicker" value="3" />
+				<label for="kPicker3">3</label>
+				<input id="kPicker4" type="radio" name="kPicker" value="4" />
+				<label for="kPicker4">4</label>
+				<input id="kPicker5" type="radio" name="kPicker" value="5" checked="checked" />
+				<label for="kPicker5">5</label>
+				<input id="kPicker6" type="radio" name="kPicker" value="6" />
+				<label for="kPicker6">6</label>
+			</div>
+			<button id="transfer" class="actionBtn">Transfer Colors</button>
+		</div>
+
+		<div id="outputImage" class="imageContainer">
+			<canvas id="output" class="imageDisplay" height="400" width="400"></canvas>
+		</div>
+	</div>
+	-->
+</body>
+
+

@@ -57,7 +57,7 @@ namespace ImageProcessing.DataObjects
 		public Image(List<Pixel> pixels)
 		{
 			this.Pixels = pixels;
-			this.OriginalPixels = this.Pixels;
+			OriginalPixels = new List<Pixel>(this.Pixels);
 		}
 
 		/// <summary>
@@ -135,18 +135,24 @@ namespace ImageProcessing.DataObjects
 		public void TransferPalette(List<Color> newPalette)
 		{
 			this.Pixels = ColorTransfer.Transfer(this, newPalette);
-			this.Palette = newPalette;
 		}
 
 		/// <summary>
 		/// Get the array for the canvas from the image
 		/// </summary>
 		/// <returns></returns>
-		public List<int> GetPixelArray()
+		public List<int> GetPixelArray(bool Original = false)
 		{
 			List<int> pixelArray = new List<int>();
 
-			foreach (Pixel pixel in this.Pixels)
+			var Pixels = this.Pixels;
+
+			if (Original)
+			{
+				Pixels = this.OriginalPixels;
+			}
+
+			foreach (Pixel pixel in Pixels)
 			{
 				pixelArray.Add(pixel.Color.R);
 				pixelArray.Add(pixel.Color.G);

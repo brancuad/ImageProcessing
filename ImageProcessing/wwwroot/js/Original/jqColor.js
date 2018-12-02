@@ -21,9 +21,11 @@ var colorPickerInit = (function ($, window) {
 							'startColorstr=#' + AHEX + ',' + 'endColorstr=#' + AHEX + ')' : '')
 					});
 
+					/*
 					$input.val(colorMode === 'HEX' && !isAlpha ? '#' + (options.isIE8 ? AHEX : colors.HEX) :
 						options._instance.toString(colorMode, options.forceAlpha)
 					);
+					*/
 
 					if (options.displayCallback) {
 						options.displayCallback(colors, mode, options);
