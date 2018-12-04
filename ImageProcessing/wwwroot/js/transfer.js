@@ -50,6 +50,7 @@ var readFile = function (e) {
 		};
 
 		display.image.src = event.target.result;
+		$(".btn").prop("disabled", false);
 	};
 
 	reader.readAsDataURL(e.target.files[0]);
@@ -60,6 +61,9 @@ $(document).ready(function () {
 	display = new Img($("#display"));
 
 	$("#file_button").change(readFile);
+
+	$(".btn").prop("disabled", true);
+	$("#upload").prop("disabled", false);
 
 	$("#upload").click(function () {
 		$("#file_button").click();

@@ -76,12 +76,7 @@ Img.prototype.setPalette = function (paletteSize) {
 		self.showPalette();
 	};
 
-	// Error alert
-	var error = function (data) {
-		alert("There was an error. Oh no!");
-	};
-
-	this.ajax(url, data, success, error);
+	this.ajax(url, data, success);
 };
 
 Img.prototype.showPalette = function () {
@@ -123,7 +118,7 @@ Img.prototype.showPalette = function () {
 Img.prototype.showSuggestions = function () {
 	var palette = this.palette;
 
-	$(".apply > input.color").remove();
+	$(".suggestion > input.color").remove();
 
 	var rgbString = function (rgba) {
 		return "rgb(" + parseInt(rgba[0]) + ", " + parseInt(rgba[1]) + ", " + parseInt(rgba[2]) + ")";
@@ -166,7 +161,7 @@ Img.prototype.showSuggestions = function () {
 		apply4Element.css("background-color", rgbString(palette[i]));
 	}
 
-	$("#suggestion_container").show();
+	$("#suggestion_container").css('display', 'table');
 };
 
 Img.prototype.getNewPalette = function () {
@@ -213,13 +208,7 @@ Img.prototype.recolor = function (newPalette, output) {
 		hideLoading();
 	};
 
-	var error = function (data) {
-		alert("Oh no!");
-
-		hideLoading();
-	};
-
-	this.ajax(url, data, success, error);
+	this.ajax(url, data, success);
 
 };
 
@@ -242,17 +231,11 @@ Img.prototype.reset = function (output) {
 		hideLoading();
 	};
 
-	var error = function (data) {
-		alert("Oh no!!");
-
-		hideLoading();
-	};
-
-	this.ajax(url, data, success, error);
+	this.ajax(url, data, success);
 };
 
 // Make an ajax call to the url, with the data stringified
-Img.prototype.ajax = function (url, data, success, error) {
+Img.prototype.ajax = function (url, data, success) {
 	console.log("Submitting form...");
 	$.ajax({
 		type: "POST",
@@ -261,7 +244,10 @@ Img.prototype.ajax = function (url, data, success, error) {
 		dataType: "json",
 		contentType: "application/json; charset=utf-8",
 		success: success,
-		error: error
+		error: function () {
+			alert("An error occurred while communicating with the server.\nRefresh the page and try again.");
+			hideLoading();
+		}
 	}).done(function () {
 		hideLoading();
 	});
