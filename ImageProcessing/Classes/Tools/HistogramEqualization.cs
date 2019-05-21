@@ -1,4 +1,7 @@
 ﻿using ImageProcessing.DataObjects;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace ImageProcessing.Tools
 {
@@ -14,6 +17,7 @@ namespace ImageProcessing.Tools
 		{
 			Dynamic,
 			ContrastLimitedAdaptive,
+			Traditional
 		}
 
 		/// <summary>
@@ -22,9 +26,9 @@ namespace ImageProcessing.Tools
 		/// <param name="image"></param>
 		/// <param name="percentage"></param>
 		/// <returns></returns>
-		public static Image Enhance(Image image, double percentage, EqualizationMethod method = EqualizationMethod.Dynamic)
+		public static List<Pixel> Enhance(Image image, double percentage, EqualizationMethod method = EqualizationMethod.Traditional)
 		{
-			Image output = new Image();
+			List<Pixel> output = new List<Pixel>();
 
 			switch (method)
 			{
@@ -34,12 +38,73 @@ namespace ImageProcessing.Tools
 				case EqualizationMethod.ContrastLimitedAdaptive:
 					output = CLAHE(image, percentage);
 					break;
+				case EqualizationMethod.Traditional:
 				default:
-					output = DHE(image, percentage);
+					output = Equalization(image.Pixels, percentage);
 					break;
 			}
 
 			return output;
+		}
+
+		/// <summary>
+		/// Traditional Histogram Equalization.
+		/// </summary>
+		/// <param name="image"></param>
+		/// <param name="percentage"></param>
+		/// <returns></returns>
+		private static List<Pixel> Equalization(List<Pixel> original, double percentage)
+		{
+			// Histogram containing pixel luminances
+			List<double> lum_list = new List<double>();
+			List<Pixel> pixels = original;
+			int[] histogram = new int[101];
+
+			for (int i = 0; i < pixels.Count; i++)
+			{
+				Pixel pixel = pixels[i];
+				double lum = pixel.Color.L;
+
+				lum_list.Add(lum);
+				histogram[(int)Math.Floor(lum)]++;
+			}
+
+			// Prevent division by 0
+			if (lum_list.Max() == 0)
+			{
+				return pixels;
+			}
+
+			// Get PDF
+			double[] pdf = new double[histogram.Length];
+			double[] cdf = new double[histogram.Length];
+			double cum = 0;
+			for (int i = 0; i < histogram.Length; i++)
+			{
+				pdf[i] = (double)histogram[i] / lum_list.Count;
+				cum = pdf[i] + cum;
+				cdf[i] = cum;
+			}
+
+			List<double> CDF = cdf.ToList();
+
+			var max = CDF.Max();
+			var min = CDF.Min();
+			for (int i = 0; i < histogram.Length; i++)
+			{
+				CDF[i] = ((CDF[i] - min) / (max - min)) * 100;
+			}
+			
+			// Set new luminance
+			for (int i = 0; i < pixels.Count; i++)
+			{
+				double newLum = CDF[(int)Math.Floor(lum_list[i])];
+
+				double lumValue = (newLum * percentage) + (pixels[i].Color.L * (1 - percentage));
+				pixels[i].Color = new Color(L: lumValue, a: pixels[i].Color.a, b: pixels[i].Color.b);
+			}
+
+			return pixels;
 		}
 
 		/// <summary>
@@ -48,7 +113,7 @@ namespace ImageProcessing.Tools
 		/// <param name="image"></param>
 		/// <param name="percentage"></param>
 		/// <returns></returns>
-		private static Image DHE(Image image, double percentage)
+		private static List<Pixel> DHE(Image image, double percentage)
 		{
 			/**
 			 * Algorithm:
@@ -59,7 +124,10 @@ namespace ImageProcessing.Tools
 			 * 5. On each partition, HE is applied
 			 */
 
-			return new Image();
+			// 1. Get histogram of L in Lab color space
+
+
+			return new List<Pixel>();
 
 		}
 
@@ -69,7 +137,7 @@ namespace ImageProcessing.Tools
 		/// <param name="image"></param>
 		/// <param name="percentage"></param>
 		/// <returns></returns>
-		private static Image CLAHE(Image image, double percentage)
+		private static List<Pixel> CLAHE(Image image, double percentage)
 		{
 			/**
 			 * Algorithm:
@@ -85,8 +153,7 @@ namespace ImageProcessing.Tools
 			 * 6. Map intensity to output image within min-max range
 			 */
 
-			return new Image();
-
+			return new List<Pixel>();
 		}
 	}
 }

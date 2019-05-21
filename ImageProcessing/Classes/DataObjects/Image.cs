@@ -135,6 +135,17 @@ namespace ImageProcessing.DataObjects
 		public void TransferPalette(List<Color> newPalette)
 		{
 			this.Pixels = ColorTransfer.Transfer(this, newPalette);
+			this.Edits.Add(new Image(this.Pixels));
+		}
+
+		/// <summary>
+		/// Perform Image Equalization
+		/// </summary>
+		/// <param name="weight"></param>
+		public void Enhance(double weight)
+		{
+			this.Pixels = HistogramEqualization.Enhance(this, weight);
+			this.Edits.Add(new Image(this.Pixels));
 		}
 
 		/// <summary>

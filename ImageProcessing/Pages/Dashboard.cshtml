@@ -43,7 +43,7 @@
 									<div id="calc_container">
 										<input id="calc" class="btn" type="button" value="Calculate" />
 									</div>
-									<div id="palette_selector_container" class="inner_table">
+									<div id="palette_selector_container" class="palette_table">
 										<div class="inner_row">
 											<div id="original_palette" class="inner_cell"><div>Old</div></div>
 											<div id="target_palette" class="inner_cell"><div>New</div></div>
@@ -56,41 +56,41 @@
 									</div>
 								</div>
 
-								<!-- Suggestions Section -->
-								<div id="tools_container" class="section">
-									<div class="section_header">Palette Suggestions</div>
-									<div>(Feature To Be Added)</div>
-									<input type="button" class="btn" id="suggest" value="Get Suggestions" />
+								<div class="inner_table">
+									<div class="inner_row">
+										<!-- Suggestions Section -->
+										<div id="tools_container" class="section">
+											<div class="section_header">Palette Suggestions</div>
+											<div>(Feature To Be Added)</div>
+											<input type="button" class="btn" id="suggest" value="Get Suggestions" />
 
-									<div id="suggestion_container" class="inner_table">
-										<div class="inner_row">
-											<div id="suggestion_1" class="inner_cell suggestion">
-												<div>
-													<input id="apply_1" class="btn apply" type="button" value="Apply" />
-												</div>
-											</div>
-											<div id="suggestion_2" class="inner_cell suggestion">
-												<div>
-													<input id="apply_2" class="btn apply" type="button" value="Apply" />
+											<div id="suggestion_container" class="palette_table">
+												<div class="inner_row">
+													<div id="suggestion_1" class="inner_cell suggestion">
+														<div>
+															<input id="apply_1" class="btn apply" type="button" value="Apply" />
+														</div>
+													</div>
+													<div id="suggestion_2" class="inner_cell suggestion">
+														<div>
+															<input id="apply_2" class="btn apply" type="button" value="Apply" />
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 
-										<div class="inner_row">
-											<div id="suggestion_3" class="inner_cell suggestion">
-												<div>
-													<input id="apply_3" class="btn apply" type="button" value="Apply" />
-												</div>
-											</div>
-											<div id="suggestion_4" class="inner_cell suggestion">
-												<div>
-													<input id="apply_4" class="btn apply" type="button" value="Apply" />
-												</div>
-											</div>
+									</div>
+									<div class="inner_row">
+										<!-- Enhancement Section -->
+										<div class="inner_cell section">
+											<div class="section_header">Equalization</div>
+											<input id="equal_slider" class="slider" type="range" min="0" max="100" value="100" />
+											<div id="equal_value">100%</div>
+											<input id="equalize" class="btn" type="button" value="Apply" />
 										</div>
 									</div>
 								</div>
-
 							</div>
 
 
@@ -113,7 +113,6 @@
 						<div class="section_row">
 							<div class="section"></div>
 						</div>
-						<div class="section_row"></div>
 					</div>
 				</div>
 			</div>

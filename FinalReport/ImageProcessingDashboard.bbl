@@ -1,0 +1,132 @@
+\begin{thebibliography}{10}
+
+\bibitem{chang2015palette}
+{\sc Chang, H., Fried, O., Liu, Y., DiVerdi, S., and Finkelstein, A.}
+\newblock Palette-based photo recoloring.
+\newblock {\em ACM Transactions on Graphics (TOG) 34}, 4 (2015), 139.
+
+\bibitem{cheng2015deep}
+{\sc Cheng, Z., Yang, Q., and Sheng, B.}
+\newblock Deep colorization.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision\/} (2015), pp.~415--423.
+
+\bibitem{cohen2006color}
+{\sc Cohen-Or, D., Sorkine, O., Gal, R., Leyvand, T., and Xu, Y.-Q.}
+\newblock Color harmonization.
+\newblock In {\em ACM Transactions on Graphics (TOG)\/} (2006), vol.~25, ACM,
+  pp.~624--630.
+
+\bibitem{faridul2014survey}
+{\sc Faridul, H.~S., Pouli, T., Chamaret, C., Stauder, J., Tr{\'e}meau, A.,
+  Reinhard, E., et~al.}
+\newblock A survey of color mapping and its applications.
+\newblock {\em Eurographics (State of the Art Reports) 3\/} (2014).
+
+\bibitem{finlayson2019color}
+{\sc Finlayson, G., Gong, H., and Fisher, R.~B.}
+\newblock Color homography: theory and applications.
+\newblock {\em IEEE transactions on pattern analysis and machine intelligence
+  41}, 1 (2019), 20--33.
+
+\bibitem{gong2016recoding}
+{\sc Gong, H., Finlayson, G.~D., and Fisher, R.~B.}
+\newblock Recoding color transfer as a color homography.
+\newblock {\em arXiv preprint arXiv:1608.01505\/} (2016).
+
+\bibitem{hassan2017enhancement}
+{\sc Hassan, M. F.~A., Ghani, A. S.~A., Ramachandram, D., Radman, A., and
+  Suandi, S.~A.}
+\newblock Enhancement of under-exposed image for object tracking algorithm
+  through homomorphic filtering and mean histogram matching.
+\newblock {\em Advanced Science Letters 23}, 11 (2017), 11257--11261.
+
+\bibitem{hristova2015style}
+{\sc Hristova, H., Le~Meur, O., Cozot, R., and Bouatouch, K.}
+\newblock Style-aware robust color transfer.
+\newblock In {\em Proceedings of the workshop on Computational Aesthetics\/}
+  (2015), Eurographics Association, pp.~67--77.
+
+\bibitem{kawulok2010competitive}
+{\sc Kawulok, M., and Smolka, B.}
+\newblock Competitive image colorization.
+\newblock In {\em 2010 IEEE International Conference on Image Processing\/}
+  (2010), IEEE, pp.~405--408.
+
+\bibitem{levin2004colorization}
+{\sc Levin, A., Lischinski, D., and Weiss, Y.}
+\newblock Colorization using optimization.
+\newblock In {\em ACM transactions on graphics (tog)\/} (2004), vol.~23, ACM,
+  pp.~689--694.
+
+\bibitem{lin2013modeling}
+{\sc Lin, S., and Hanrahan, P.}
+\newblock Modeling how people extract color themes from images.
+\newblock In {\em Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems\/} (2013), ACM, pp.~3101--3110.
+
+\bibitem{nguyen2017group}
+{\sc Nguyen, R., Price, B., Cohen, S., and Brown, M.~S.}
+\newblock Group-theme recoloring for multi-image color consistency.
+\newblock In {\em Computer Graphics Forum\/} (2017), vol.~36, Wiley Online
+  Library, pp.~83--92.
+
+\bibitem{o2011color}
+{\sc O'Donovan, P., Agarwala, A., and Hertzmann, A.}
+\newblock Color compatibility from large datasets.
+\newblock {\em ACM Transactions on Graphics (TOG) 30}, 4 (2011), 63.
+
+\bibitem{semmo2017neural}
+{\sc Semmo, A., Isenberg, T., and D{\"o}llner, J.}
+\newblock Neural style transfer: a paradigm shift for image-based artistic
+  rendering?
+\newblock In {\em Proceedings of the Symposium on Non-Photorealistic Animation
+  and Rendering\/} (2017), ACM, p.~5.
+
+\bibitem{singh2015enhancement}
+{\sc Singh, K., Kapoor, R., and Sinha, S.~K.}
+\newblock Enhancement of low exposure images via recursive histogram
+  equalization algorithms.
+\newblock {\em Optik 126}, 20 (2015), 2619--2625.
+
+\bibitem{singh2015histogram}
+{\sc Singh, R.~P., and Dixit, M.}
+\newblock Histogram equalization: a strong technique for image enhancement.
+\newblock {\em International Journal of Signal Processing, Image Processing and
+  Pattern Recognition 8}, 8 (2015), 345--352.
+
+\bibitem{tan2018palette}
+{\sc Tan, J., Echevarria, J., and Gingold, Y.}
+\newblock Palette-based image decomposition, harmonization, and color transfer.
+\newblock {\em arXiv preprint arXiv:1804.01225\/} (2018).
+
+\bibitem{tan2017decomposing}
+{\sc Tan, J., Lien, J.-M., and Gingold, Y.}
+\newblock Decomposing images into layers via rgb-space geometry.
+\newblock {\em ACM Transactions on Graphics (TOG) 36}, 1 (2017), 7.
+
+\bibitem{wan2012image}
+{\sc Wan, Y., Tang, Z., Miao, Z., and Li, B.}
+\newblock Image composition with color harmonization.
+\newblock {\em International Journal of Pattern Recognition and Artificial
+  Intelligence 26}, 03 (2012), 1254001.
+
+\bibitem{wang2008color}
+{\sc Wang, L., Giesen, J., McDonnell, K.~T., Zolliker, P., and Mueller, K.}
+\newblock Color design for illustrative visualization.
+\newblock {\em IEEE Transactions on Visualization and Computer Graphics 14}, 6
+  (2008), 1739--1754.
+
+\bibitem{xiao2006color}
+{\sc Xiao, X., and Ma, L.}
+\newblock Color transfer in correlated color space.
+\newblock In {\em Proceedings of the 2006 ACM international conference on
+  Virtual reality continuum and its applications\/} (2006), ACM, pp.~305--309.
+
+\bibitem{zhang2017palette}
+{\sc Zhang, Q., Xiao, C., Sun, H., and Tang, F.}
+\newblock Palette-based image recoloring using color decomposition
+  optimization.
+\newblock {\em IEEE Transactions on Image Processing 26}, 4 (2017), 1952--1964.
+
+\end{thebibliography}

@@ -1,7 +1,7 @@
 ﻿/// <reference path="jquery-3.3.1.js" />
 /// <reference path="imageData.js" />
 
-// Front End for Transfer.cshtml
+// Front End for Dashboard.cshtml
 
 var showLoading = function () {
 	display.canvas.fadeTo("medium", .3);
@@ -47,6 +47,10 @@ var readFile = function (e) {
 			$("#reset").mousedown(showLoading).mouseup(function () {
 				display.reset(display);
 			});
+
+			$("#equalize").mousedown(showLoading).mouseup(function () {
+				display.equalize($("#equal_slider").val() / 100);
+			});
 		};
 
 		display.image.src = event.target.result;
@@ -67,5 +71,9 @@ $(document).ready(function () {
 
 	$("#upload").click(function () {
 		$("#file_button").click();
+	});
+
+	$("#equal_slider").change(function () {
+		$("#equal_value").text($("#equal_slider").val() + "%");
 	});
 });

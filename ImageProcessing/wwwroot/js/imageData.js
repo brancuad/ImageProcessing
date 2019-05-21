@@ -138,27 +138,12 @@ Img.prototype.showSuggestions = function () {
 			.attr("type", "button")
 			.addClass("color");
 
-		var apply3Element = $("<input></input>")
-			.attr("id", "suggest3" + (i + 1))
-			.attr("class", "paletteColor")
-			.attr("type", "button")
-			.addClass("color");
-
-		var apply4Element = $("<input></input>")
-			.attr("id", "suggest4" + (i + 1))
-			.attr("class", "paletteColor")
-			.attr("type", "button")
-			.addClass("color");
 
 		$("#suggestion_1").append(apply1Element);
 		$("#suggestion_2").append(apply2Element);
-		$("#suggestion_3").append(apply3Element);
-		$("#suggestion_4").append(apply4Element);
 
 		apply1Element.css("background-color", rgbString(palette[i]));
 		apply2Element.css("background-color", rgbString(palette[i]));
-		apply3Element.css("background-color", rgbString(palette[i]));
-		apply4Element.css("background-color", rgbString(palette[i]));
 	}
 
 	$("#suggestion_container").css('display', 'table');
@@ -210,6 +195,30 @@ Img.prototype.recolor = function (newPalette, output) {
 
 	this.ajax(url, data, success);
 
+};
+
+Img.prototype.equalize = function (weight) {
+	var self = this;
+
+	var url = "api/enhance";
+
+	var data = {
+		Weight: weight
+	};
+
+	var success = function (result) {
+		imgData = self.context.createImageData(self.canvas.width(), self.canvas.height());
+
+		for (var i = 0; i < result.length; i++) {
+			imgData.data[i] = result[i];
+		}
+
+		self.context.putImageData(imgData, x = 0, y = 0);
+
+		hideLoading();
+	};
+
+	this.ajax(url, data, success);
 };
 
 Img.prototype.reset = function (output) {

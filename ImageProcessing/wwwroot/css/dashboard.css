@@ -26,6 +26,13 @@
 	border-collapse: separate;
 }
 
+.palette_table {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: separate;
+}
+
 .inner_row {
 	display: table-row;
 }
@@ -56,10 +63,6 @@
 
 #calc_container {
 	text-align: center;
-}
-
-#palette_selector_container {
-	height: 50%;
 }
 
 .display {
@@ -100,4 +103,9 @@
 
 #suggestion_container {
 	display: none;
+}
+
+.slider {
+	padding: 5px;
+	display: inline-block;
 }
